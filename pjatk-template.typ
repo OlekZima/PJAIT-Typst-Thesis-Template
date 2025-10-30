@@ -4,7 +4,7 @@
     faculty: "Faculty of Computer Science",
     department: "Name of your Specialization's Department",
     specialization: "Name of your Specialization",
-    authors: ("Your Name --- s#####", "Another Author's Name --- s#####"),
+    authors: ("Your Name --- s#####",),
     title: "Your Thesis Title",
     supervisor: "Supervisor's Name",
     auxiliary-supervisor: "Auxiliary Supervisor's Name",
@@ -23,6 +23,7 @@
         size: 12pt,
         font: "EB Garamond",
         lang: language,
+        weight: 400
     )
 
     set par(justify: true)
@@ -48,7 +49,7 @@
     }
 
     show raw: it => [
-        #h(1pt)
+        #v(1pt)
         #box(
             radius: 4pt,
             fill: rgb(210, 235, 235, 80),
@@ -74,37 +75,53 @@
         image("PJATK_pl_poziom_1.pdf")
 
         align(center)[
-            #h(2cm)
+            #v(2cm)
 
             #strong(faculty)
 
-            #h(1cm)
+            #v(1cm)
 
-            #strong(department)
-            #linebreak()
+            #strong(department)\
             #specialization
 
-            #h(1cm)
+            #v(1cm)
 
-            //#eval(authors.join("\n"), mode: "markup")
+            #eval(mode: "markup", authors.map(s => s.replace("#", "\#") + "\\").join("\n"))
 
-            #h(1cm)
+            #v(1cm)
 
             #strong(text(size: 2em, title))
 
             #v(1fr)
+
+            #align(right)[
+                #block(width: 5cm)[
+                    #align(left)[
+                        #context {
+                            if text.lang == "pl" {
+                                [Praca inżynierska / Praca magisterska napisana pod kierunkiem:]
+                            } else {
+                                [Master's degree / Bachelor's degree thesis written under the supervision of:]
+                            }
+                        }
+                        #v(1em)
+                        #strong(supervisor)\
+                        #auxiliary-supervisor
+                    ]
+                ]
+            ]
+
+            #v(1fr)
+
+            #context {
+                if text.lang == "pl" {
+                    [Warszawa]
+                } else {
+                    [Warsaw]
+                }
+            },
+            #datetime.today().display("[month repr:long] [year]")
         ]
-
-                /*\begin{rightbox}{5cm}
-                    \pjthesistypeandsupervisortext\\
-                    \bigskip
-                    {\bfseries \pjsupervisor}\\
-                    \pjauxsupervisor
-                \end{rightbox}
-
-                \vfill
-
-                \pjdefencedateandloc*/
     }
 
     outline(target: heading)
