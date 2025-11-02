@@ -56,14 +56,14 @@ Here we will briefly explain the appropriate styling for theses. For starters, l
 
 It is best to use infinitives for describing the work done. For example:
 
-#quote[
+#quote(attribution: "Some source")[
     #set text(fill: green)
     Sample Typst template has been prepared in order to make it easier for PJAIT's students to write their theses documentations.
 ]
 
 First-person pronouns should be avoided:
 
-#quote[
+#quote(attribution: "Some other source")[
     #set text(fill: red)
     I created a simple Typst template in order to make it easier for PJAIT's students to write their theses documentations.
 ]
