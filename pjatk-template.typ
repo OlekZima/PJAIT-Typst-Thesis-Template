@@ -36,15 +36,15 @@
         if it.element != none and it.element.func() == heading {
             return link(
                 it.element.location(),
-                    context {
-                        strong[
-                            #numbering(
-                                it.element.numbering,
-                                ..counter(heading).at(it.element.location()),
-                            )
-                            #it.element.body
-                        ]
-                    },
+                context {
+                    show text: it => strong(it)
+                    numbering(
+                        it.element.numbering,
+                        ..counter(heading).at(it.element.location()),
+                    )
+                    [ ]
+                    it.element.body
+                },
             )
         }
         it
