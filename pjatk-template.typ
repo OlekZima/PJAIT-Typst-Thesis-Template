@@ -51,10 +51,12 @@
     }
 
     show raw: it => {
-        box(
+        highlight(
             radius: 4pt,
             fill: rgb(210, 235, 235, 80),
-            outset: 2pt
+            extent: 2pt,
+            top-edge: 1em,
+            bottom-edge: -0.25em
         )[#it]
     }
 
