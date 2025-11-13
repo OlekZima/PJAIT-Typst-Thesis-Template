@@ -1,3 +1,5 @@
+#import "@preview/icu-datetime:0.2.0" as icu
+
 #let commonPhrases = (
     "logo": ("pl": "PJATK_pl_poziom_1.pdf", "en": "PJAIT_en_poziom_1.pdf"),
     "supervision-text": ("pl": "Praca inżynierska / Praca magisterska napisana pod kierunkiem:", "en": "Master's degree / Bachelor's degree thesis written under the supervision of:"),
@@ -10,8 +12,92 @@
     "list-of-tables": ("pl": "Spis Tabel", "en": "List of Tables"),
 )
 
+#let placeholder-abstract = [
+    The abstract should be between 400 and 1500 characters, including spaces.
+    *Thesis written in English must also include abstract and keywords translation to Polish*.
+    Abstract should usually be written *towards the end* of your thesis work, since that is the time when you best know what (and how) exactly has been accomplished.
+    *Pay extra attention and spend some extra time when developing an abstract.*
+    This is due to the fact that most people will be glancing over your abstract in order to determine whether it is worth it for them to delve deeper into your work.
+    This is the place where you need to attractively explain what can be found in this thesis.
+    Do not introduce additional paragraphs in the abstract.
+    The rest of this document describes general rules for writing theses documentations in PJAIT.]
+
+#let placeholder-keywords = [
+    Keywords #sym.dot.op can #sym.dot.op be #sym.dot.op both #sym.dot.op single- or multiple-word phrases
+    #sym.dot.op At #sym.dot.op least #sym.dot.op 3 #sym.dot.op keywords #sym.dot.op are #sym.dot.op necessary
+    #sym.dot.op Threat #sym.dot.op them #sym.dot.op as #sym.dot.op tags #sym.dot.op Your #sym.dot.op thesis
+    #sym.dot.op must #sym.dot.op be #sym.dot.op searchable #sym.dot.op using #sym.dot.op them #sym.dot.op
+    Separate them by using the `#sym.dot.op` syntax.]
+
+#let titlepage(
+    language,
+    margin,
+    faculty,
+    department,
+    specialization,
+    authors,
+    title,
+    supervisor,
+    auxiliary-supervisor,
+) = {
+       set page(margin: margin)
+       image(commonPhrases.at("logo").at(language))
+
+       align(center)[
+           #v(2cm)
+
+           #strong(faculty)
+
+           #v(1cm)
+
+           #strong(department)\
+           #specialization
+
+           #v(1cm)
+
+           #eval(mode: "markup", authors.map(s => s.replace("#", "\#") + "\\").join("\n"))
+
+           #v(1cm)
+
+           #{
+               set par(justify: false)
+               strong(text(size: 2em, hyphenate: false, title))
+           }
+
+           #v(1fr)
+
+           #align(right)[
+               #set par(leading: 0.5em)
+               #block(width: 5cm)[
+                   #align(left)[
+                       #commonPhrases.at("supervision-text").at(language)
+                       #v(1em)
+                       #strong(supervisor)\
+                       #auxiliary-supervisor
+                   ]
+               ]
+           ]
+
+           #v(1fr)
+
+           #commonPhrases.at("city").at(language),
+           #icu.fmt(datetime.today(), locale: language, length: "long")
+       ]
+    }
+
+#let abstractAndKeywords(language, abstract, keywords) = {
+    align(center, strong(text(size: 1.5em, [#commonPhrases.at("abstract").at(language)])))
+
+    abstract
+
+    align(center, strong(text(size: 1.5em, [#commonPhrases.at("keywords").at(language)])))
+
+    keywords
+}
+
 #let apply-pjatk-template(
     body,
+    language: "en",
     faculty: "Faculty of Computer Science",
     department: "Name of your Specialization's Department",
     specialization: "Name of your Specialization",
@@ -19,15 +105,22 @@
     title: "Your Carefully Selected and Expressive Thesis Title",
     supervisor: "Supervisor's Name",
     auxiliary-supervisor: "Auxiliary Supervisor's Name",
-    language: "en",
-    for-printing: false
+    abstract: placeholder-abstract,
+    keywords: placeholder-keywords,
+    for-printing: false,
+    faculty-pl: none,
+    department-pl: none,
+    specialization-pl: none,
+    title-pl: none,
+    abstract-pl: none,
+    keywords-pl: none,
 ) = {
     set document(title: title)
 
     let chosenMargins = if for-printing {
-        (top: 1in, bottom: 1.75in, inside: 2in, outside: 1in)
+        (top: 1in, bottom: 1.25in, inside: 2.25in, outside: 1.25in)
     } else {
-        (top: 1in, bottom: 1.25in, left: 1.5in, right: 1.5in)
+        (top: 1in, bottom: 1.25in, left: 1.75in, right: 1.75in)
     }
 
     set page(
@@ -74,106 +167,68 @@
         )[#it]
     }
 
-    show figure.where(kind: raw): set block(breakable: true)
-    show figure.caption: set block(sticky: true)
+    show raw.where(block: true): set text(size: 0.8em)
 
     set enum(indent: 1em)
     set list(indent: 1em, marker: ([•], [◦]))
     set quote(block: true)
 
+    show heading: set text(hyphenate: false)
     show heading.where(level: 1): it => { pagebreak(weak: true, to: "odd"); it }
 
     show figure.where(kind: raw): set figure.caption(position: top)
+    show figure.where(kind: raw): set block(breakable: true)
+    show figure.where(kind: table): set figure.caption(position: top)
+    show figure.where(kind: table): set block(breakable: true)
+    show figure.caption: set block(sticky: true)
 
     set math.equation(numbering: "(1)")
 
-    // ==================== INITIAL CONTENT ====================
-    {
-        set page(margin: (top: 1in, bottom: 1.25in, left: 1.75in, right: 1.75in))
-        context {
-            image(commonPhrases.at("logo").at(text.lang))
+    context {
+        titlepage(
+            language,
+            chosenMargins,
+            faculty,
+            department,
+            specialization,
+            authors,
+            title,
+            supervisor,
+            auxiliary-supervisor,
+        )
+
+        if text.lang == "en" {
+            set text(lang: "pl")
+            titlepage(
+                "pl",
+                chosenMargins,
+                faculty-pl,
+                department-pl,
+                specialization-pl,
+                authors,
+                title-pl,
+                supervisor,
+                auxiliary-supervisor,
+            )
+            set text(lang: "en")
+        } else {
+            [~]
+            pagebreak()
         }
-
-        align(center)[
-            #v(2cm)
-
-            #strong(faculty)
-
-            #v(1cm)
-
-            #strong(department)\
-            #specialization
-
-            #v(1cm)
-
-            #eval(mode: "markup", authors.map(s => s.replace("#", "\#") + "\\").join("\n"))
-
-            #v(1cm)
-
-            #{
-                set par(justify: false)
-                show title: it => strong(text(size: 2em, hyphenate: false, it))
-                title
-            }
-
-            #v(1fr)
-
-            #align(right)[
-                #set par(leading: 0.5em)
-                #block(width: 5cm)[
-                    #align(left)[
-                        #context {
-                            commonPhrases.at("supervision-text").at(text.lang)
-                        }
-                        #v(1em)
-                        #strong(supervisor)\
-                        #auxiliary-supervisor
-                    ]
-                ]
-            ]
-
-            #v(1fr)
-
-            #context {
-                commonPhrases.at("city").at(text.lang)
-                [,]
-            }
-            #datetime.today().display("[month repr:long] [year]")
-        ]
     }
-
-    [~]
-    pagebreak()
 
     set page(numbering: "1")
 
     context {
-        align(center, strong(text(size: 1.5em, [#commonPhrases.at("abstract").at(text.lang)])))
+        abstractAndKeywords(language, abstract, keywords)
+
+        if text.lang == "en" {
+            pagebreak()
+            set text(lang: "pl")
+            abstractAndKeywords("pl", abstract-pl, keywords-pl)
+            set text(lang: "en")
+        }
     }
-
-    [
-        Shortly describe what kind of problem has been inspected in the thesis, and how it has been solved.
-        The abstract should be between 400 and 1500 characters, including spaces.
-        *Thesis written in English must also include abstract and keyword translations to Polish*.
-        Abstract should usually be written *towards the end* of your thesis work, since that is the time when you best know what (and how) exactly has been accomplished.
-        *Pay extra attention and spend some extra time when developing an abstract.*
-        This is due to the fact that most people will be glancing over your abstract in order to determine whether it is worth it for them to delve deeper into your work.
-        This is the place where you need to attractively explain what can be found in this thesis.
-        Do not introduce additional paragraphs in the abstract.
-        The rest of this document describes general rules for writing theses documentations in PJAIT.
-    ]
-
-    context {
-        align(center, strong(text(size: 1.5em, [#commonPhrases.at("keywords").at(text.lang)])))
-    }
-
-    [
-        Keywords #sym.dot.op can #sym.dot.op be #sym.dot.op both #sym.dot.op single- or multiple-word phrases
-        #sym.dot.op At #sym.dot.op least #sym.dot.op 3 #sym.dot.op keywords #sym.dot.op are #sym.dot.op necessary
-        #sym.dot.op Threat #sym.dot.op them #sym.dot.op as #sym.dot.op tags #sym.dot.op Your #sym.dot.op thesis
-        #sym.dot.op must #sym.dot.op be #sym.dot.op searchable #sym.dot.op using #sym.dot.op them #sym.dot.op
-        Separate them by using the `#sym.dot.op` syntax.
-    ]
 
     align(
         center,

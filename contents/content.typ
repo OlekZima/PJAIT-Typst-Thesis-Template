@@ -20,7 +20,8 @@ It is impossible to answer this question precisely.
 A rule of thumb presents itself as follows:
 
 - Copy-pasting an entire page of academic work
-  without any citations is a *crime* (copyright).
+  without any citations
+  is a *crime* (copyright).
 - Each important aspect of your work
   that is not directly created by you,
   should be backed by citations.
@@ -30,7 +31,8 @@ A rule of thumb presents itself as follows:
   and then providing many references at the same time.
 - It is permitted to omit the citation of internet webpages
   if authors of referenced texts are unknown.
-  In such situations you should reference the source broadly,
+  In such situations
+  you should reference the source broadly,
   e.g., "On IBM's website it can be seen that [...]."
 
 Theses that were prepared and submitted
@@ -42,11 +44,11 @@ will be rejected.
 It is best to split your chapters
 #footnote[Chapters. Not sections, not subsections. Entire chapters.]
 into separate files.
-Notice how this project consists of
-`contents` directory with `introduction.typ` and `content.typ` inside,
+Notice how this project consists of `contents` directory with `introduction.typ` and `content.typ` inside,
 which are then `#include`d in the `main.typ` file.
 This makes it very easy to change the ordering,
-separate different topics, and collaborate.
+separate different topics,
+and collaborate.
 
 === Manual numbering (of pretty much anything)
 
@@ -54,20 +56,90 @@ Do *not* include any numbering in the names of the files.
 E.g., notice that the files are named `introduction.typ` and `content.typ`,
 *not* `1-introduction.typ` and `2-content.typ`.
 You do *not* want to create such dependencies.
-Typst does the heavy-duty job of automatic numbering and ordering.
-Do not interfere with it without a good reason.
-What will happen if you spend a lot of time to number your files,
-and then realize that you need to introduce a new file/chapter in the middle?
-You're a programmer---apply and respect good programming practices.
+Typst does the heavy-duty job
+of automatic numbering and ordering.
+Do not interfere with it
+without a good reason.
+What will happen if you spend a lot of time
+to number your files,
+and then realize
+that you need to introduce a new file/chapter
+in the middle?
+You are a programmer---apply and respect good programming practices.
+
+This also applies to enumerations or lists (itemizations).
+To introduce an enumeration,
+use `+`:
+
+#figure(
+    caption: [Example of enumeration creation.]
+)[
+```typst
++ first item
+  + first subitem
+  + second subitem
++ second item
++ third item
+```
+]<listing-Example-of-enum-creation>
+
+@listing-Example-of-enum-creation, when rendered,
+looks as follows:
+
++ first item
+  + first subitem#footnote[To some,
+  using the exact same numbers
+  for a sublist
+  does not look elegant,
+  or even good.
+  Fortunately, it is very easy
+  to use a `#set` rule
+  to change change this appearance.
+  See: #link("https://typst.app/docs/reference/model/enum#parameters-numbering")]
+  + second subitem
++ second item
++ third item
+
+Using `+` over manual numbering
+has a huge advantage---it makes it so that adding a new element in the middle
+does not require
+changing the numbering
+of trailing items.
+
+Use `-` for unordered lists (itemizations):
+
+#figure(
+    caption: [Example of itemization creation.]
+)[
+```typst
+- first item
+  - first subitem
+  - second subitem
+- second item
+- third item
+```
+]<listing-Example-of-itemization-creation>
+
+Rendered:
+
+- first item
+  - first subitem#footnote[By default,
+  this template already changes
+  the default look
+  of nested itemizations.]
+  - second subitem
+- second item
+- third item
 
 == How to introduce other media content?
 
-Typst provides a wide array of options to deal with inputting things like:
+Typst provides a wide array of options
+to deal with inputting things like:
 
-- code listings
-- tables
-- images
-- equations
+- code listings,
+- tables,
+- images,
+- equations.
 
 Let us inspect couple of examples.
 
@@ -116,7 +188,7 @@ which in this are put after the listings
 (e.g., `@listing-Example-of-Kotlin-code-rendered-as-a-code-block` creates the following reference: @listing-Example-of-Kotlin-code-rendered-as-a-code-block).
 
 Currently, this template uses the Codly package @CodlyPackage @CodlyDocumentation,
-but it's acceptable to present and suggest alternatives
+but it is acceptable to present and suggest alternatives
 (or at least help out with nicer rendering...).
 
 === Tables
@@ -240,6 +312,10 @@ placed below them.
 ````
 ]<listing-Examples-of-image-usage>
 
+Always try to include images
+that are in vector format---rather than raster---so that automatic scaling
+is better applied.
+
 === Equations
 
 Use LaTeX-like syntax.
@@ -263,7 +339,7 @@ so instead of
 `$ a x^2+b x+c=0 $`
 one should type
 `$ a x^2+b x+c=0 $ <eq-Quadratic-example>`
-so that it's rendered like this:
+so that it is rendered like this:
 $ a x^2+b x+c=0 $ <eq-Quadratic-example>
 
 and referenced like this: @eq-Quadratic-example.
