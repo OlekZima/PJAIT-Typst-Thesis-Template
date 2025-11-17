@@ -108,12 +108,12 @@
     abstract: placeholder-abstract,
     keywords: placeholder-keywords,
     for-printing: false,
-    faculty-pl: none,
-    department-pl: none,
-    specialization-pl: none,
-    title-pl: none,
-    abstract-pl: none,
-    keywords-pl: none,
+    faculty-pl: "Wydział Informatyki",
+    department-pl: "Nazwa katedry",
+    specialization-pl: "Nazwa specjalizacji",
+    title-pl: "Twój strannie dobrawy i ekspresywny tytuł pracy dyplomowej",
+    abstract-pl: "tłumaczenie streszczenia",
+    keywords-pl: "tłumaczenie słów kluczowych",
 ) = {
     set document(title: title)
 
