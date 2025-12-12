@@ -1,4 +1,4 @@
-name: Build reports PDF documents
+name: Build PDF document
 on:
   push:
     branches:
