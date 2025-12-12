@@ -61,7 +61,7 @@ are "this-document-specific",
 and should _not_ appear
 in your thesis.
 The rest of them
-(that _do_ contain #sym.dagger)
+(without #sym.dagger)
 should be included
 in your document.
 
